@@ -23,8 +23,9 @@
 
   <div id="intro">
     <p>Välkommen! Den här studien undersöker hur vi uppfattar ton i textmeddelanden. Du kommer att få se 12 meddelanden från antingen en chef eller en vän, och svara på 3 frågor för varje meddelande.</p>
-    <p>Du kommer nu att få läsa 12 korta meddelanden. Ibland kommer meddelandet från en chef, ibland från en vän. Formuleringen i meddelandena varierar något – ibland med punkt, utropstecken eller utan skiljetecken.</p>
-    <p>Efter varje meddelande får du svara på tre frågor om hur du uppfattade tonen. Det är viktigt att du utgår från hur det är skrivet och vem som skickar det.  </p>
+    <p>Formuleringen i meddelandena varierar – ibland med punkt, utropstecken eller utan skiljetecken.</p>
+    <p>Efter varje meddelande får du svara på tre frågor om hur du uppfattade tonen. Det är viktigt att du utgår från hur det är skrivet och vem som skickar det.</p>
+
     <label for="age">Din ålder:</label>
     <input type="number" id="age" required />
 
@@ -78,7 +79,6 @@
       document.getElementById('intro').classList.add('hidden');
       document.getElementById('experiment').classList.remove('hidden');
 
-      // Skapa alla 12 kombinationer
       kontexter.forEach(kontext => {
         skiljetecken.forEach(tecken => {
           meddelanden.forEach(text => {
@@ -124,7 +124,6 @@
 
         <button id="nextButton" onclick="saveResponse()">Nästa</button>
         <span id="loading" style="display:none; margin-left:10px;">Skickar svar...</span>
-
       `;
 
       container.appendChild(block);
@@ -133,16 +132,15 @@
     function saveResponse() {
       const nextBtn = document.getElementById('nextButton');
       const loadingSpan = document.getElementById('loading');
-    
-      // Inaktivera knapp och visa laddningstext
+
       nextBtn.disabled = true;
       loadingSpan.style.display = 'inline';
-    
+
       const q1 = document.getElementById('q1').value;
       const q2 = document.getElementById('q2').value;
       const q3 = document.getElementById('q3').value;
       const stim = stimuli[current];
-    
+
       const dataToSend = {
         age: participantInfo.age,
         gender: participantInfo.gender,
@@ -154,14 +152,12 @@
         seriousness: q2,
         harshness: q3
       };
-    
+
       responses.push(dataToSend);
-    
+
       sendResponseToSheetDB(dataToSend).then(() => {
-        // När svar skickats klart:
         nextBtn.disabled = false;
         loadingSpan.style.display = 'none';
-    
         current++;
         showNext();
       }).catch(() => {
@@ -169,11 +165,6 @@
         nextBtn.disabled = false;
         loadingSpan.style.display = 'none';
       });
-    }
-
-
-      current++;
-      showNext();
     }
 
     function sendResponseToSheetDB(data) {
@@ -189,21 +180,6 @@
         }
       });
     }
-
-
-
-    /*function downloadCSV() {
-      let csv = 'Age,Gender,Order,Context,Punctuation,Message,Friendly,Serious,Harsh\n';
-      responses.forEach(r => {
-        csv += `${r.age},${r.gender},${r.stimulus_order},${r.context},${r.punctuation},"${r.message}",${r.friendliness},${r.seriousness},${r.harshness}\n`;
-      });
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'textmeddelande_studie.csv';
-      a.click();
-    }*/
   </script>
 </body>
 </html>
