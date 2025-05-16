@@ -2,36 +2,82 @@
 <html lang="sv">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Studie om textmeddelanden</title>
   <style>
     body {
       font-family: sans-serif;
       max-width: 700px;
-      margin: 40px auto;
-      padding: 20px;
+      margin: 20px auto;
+      padding: 10px;
       line-height: 1.6;
+      box-sizing: border-box;
     }
+
     .hidden { display: none; }
-    .question-block { margin-bottom: 30px; }
-    label { display: block; margin: 6px 0 3px; }
-    input[type="range"] { width: 100%; }
-    button { margin-top: 20px; padding: 10px 20px; }
+
+    .question-block {
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      margin: 8px 0 4px;
+      font-weight: bold;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      margin: 4px 0;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      font-size: 1em;
+      width: 100%;
+      max-width: 300px;
+    }
 
     .scale {
       display: flex;
       justify-content: space-between;
-      font-size: 0.9em;
+      font-size: 0.95em;
       margin-top: 2px;
       margin-bottom: 15px;
       padding: 0 2px;
     }
+
     .scale span {
       width: 14%;
       text-align: center;
+      touch-action: manipulation;
+    }
+
+    blockquote {
+      background: #f2f2f2;
+      padding: 10px 15px;
+      border-left: 4px solid #ccc;
+      margin: 10px 0;
+    }
+
+    #end {
+      text-align: center;
+      margin-top: 40px;
     }
     
+    #end h2 {
+      font-size: 1.5em;
+      margin-bottom: 15px;
+    }
+    
+    #end p {
+      margin: 10px 0;
+    }
+
   </style>
 </head>
+
 <body>
   <h1>Studie om textmeddelanden</h1>
 
@@ -67,8 +113,11 @@
 
   <div id="end" class="hidden">
     <h2>Tack för ditt deltagande!</h2>
-    <p>Dina svar har skickats in.</p>
+    <p>Dina svar har skickats in och är nu sparade. Du kan nu stänga sidan.</p>
+    <p style="font-size: 0.9em; color: #555;">Vid frågor är du välkommen att kontakta mig på: <br>
+    <strong>gusnhoknsi@student.gu.se</strong></p>
   </div>
+
 
   <script>
     const stimuli = [];
