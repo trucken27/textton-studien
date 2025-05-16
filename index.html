@@ -147,17 +147,17 @@ function startStudy() {
         <p><strong>${contextText}</strong></p>
         <blockquote>${fullText}</blockquote>
 
-        <label>Hur vänlig upplevde du tonen? (1 = Inte alls, 7 = Mycket)</label>
-        <input type="range" min="1" max="7" value="4" id="q1" />
-        <div class="scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span></div>
-
-        <label>Hur allvarligt kändes meddelandet? (1 = Inte alls, 7 = Mycket)</label>
-        <input type="range" min="1" max="7" value="4" id="q2" />
-        <div class="scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span></div>
-
-        <label>Hur mjuk eller hård uppfattade du avsändaren? (1 = Mjukast, 7 = Hårdast)</label>
-        <input type="range" min="1" max="7" value="4" id="q3" />
-        <div class="scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span></div>
+      <label>Hur <strong>vänlig</strong> upplevde du tonen? (1 = Inte alls, 7 = Mycket)</label>
+      <input type="range" min="1" max="7" value="4" id="q1" />
+      <div class="scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span></div>
+      
+      <label>Hur <strong>allvarligt</strong> kändes meddelandet? (1 = Inte alls, 7 = Mycket)</label>
+      <input type="range" min="1" max="7" value="4" id="q2" />
+      <div class="scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span></div>
+      
+      <label>Hur <strong>mjuk eller hård</strong> uppfattade du avsändaren? (1 = Mjukast, 7 = Hårdast)</label>
+      <input type="range" min="1" max="7" value="4" id="q3" />
+      <div class="scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span></div>
 
         <button id="nextButton" onclick="saveResponse()">Nästa</button>
         <span id="loading" style="display:none; margin-left:10px;">Skickar svar...</span>
