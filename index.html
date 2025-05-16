@@ -43,10 +43,10 @@
     <p>Efter varje meddelande får du svara på tre frågor om hur du uppfattade tonen. Det är viktigt att du utgår från hur det är skrivet och vem som skickar det.</p>
 
     <label for="pid">Ditt deltagar-ID (t.ex. li92):</label>
-    <input type="text" id="pid" required />
+    <input type="text" id="pid" required maxlength="20" />
     
     <label for="age">Din ålder:</label>
-    <input type="number" id="age" required />
+    <input type="number" id="age" required min="1" max="125" />
 
     <label for="gender">Ditt kön:</label>
     <select id="gender">
@@ -93,8 +93,15 @@
       const age = document.getElementById('age').value;
       const gender = document.getElementById('gender').value;
       const pid = document.getElementById('pid').value;
-      if (!pid || !age || !gender) return alert('Fyll i alla fält först.');
-      participantInfo = { pid, age, gender };
+      if (!pid || pid.length > 20) {
+      return alert('ID måste anges och får vara max 20 tecken.');
+      }
+      if (!age || age < 1 || age > 100) {
+      return alert('Ange en giltig ålder mellan 1 och 125.');
+      }
+      if (!gender) {
+        return alert('Välj ett könsalternativ.');
+      }
 
       document.getElementById('intro').classList.add('hidden');
       document.getElementById('experiment').classList.remove('hidden');
