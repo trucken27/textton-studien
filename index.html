@@ -45,7 +45,9 @@
 
   <div id="end" class="hidden">
     <h2>Tack för ditt deltagande!</h2>
-    <button onclick="downloadCSV()">Ladda ner dina svar (CSV)</button>
+    //<button onclick="downloadCSV()">Ladda ner dina svar (CSV)</button>//
+    <h2>Tack för ditt deltagande!</h2>
+    <p>Dina svar har skickats in.</p>
   </div>
 
   <script>
@@ -146,11 +148,40 @@
         harshness: q3
       });
 
+      sendResponseToSheetDB({
+        age: participantInfo.age,
+        gender: participantInfo.gender,
+        stimulus_order: current + 1,
+        context: stim.kontext,
+        punctuation: stim.tecken || 'Inget',
+        message: stim.text,
+        friendliness: q1,
+        seriousness: q2,
+        harshness: q3
+      });
+
       current++;
       showNext();
     }
 
-    function downloadCSV() {
+    function sendResponseToSheetDB(data) {
+      fetch('https://sheetdb.io/api/v1/jrge0h8g0ne99', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ data: data })
+      })
+      .then(response => {
+        if (!response.ok) {
+          console.error('Fel vid sändning till SheetDB:', response.statusText);
+        }
+      })
+      .catch(error => console.error('Nätverksfel:', error));
+    }
+
+
+    /*function downloadCSV() {
       let csv = 'Age,Gender,Order,Context,Punctuation,Message,Friendly,Serious,Harsh\n';
       responses.forEach(r => {
         csv += `${r.age},${r.gender},${r.stimulus_order},${r.context},${r.punctuation},"${r.message}",${r.friendliness},${r.seriousness},${r.harshness}\n`;
@@ -161,7 +192,7 @@
       a.href = url;
       a.download = 'textmeddelande_studie.csv';
       a.click();
-    }
+    }*/
   </script>
 </body>
 </html>
