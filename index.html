@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <title>Studie om textmeddelanden</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .hidden { display: none; }
+    .question-block { margin-bottom: 30px; }
+    label { display: block; margin: 6px 0 3px; }
+    input[type="range"] { width: 100%; }
+    button { margin-top: 20px; padding: 10px 20px; }
+  </style>
+</head>
+<body>
+  <h1>Studie om textmeddelanden</h1>
+
+  <div id="intro">
+    <p>Välkommen! Den här studien undersöker hur vi uppfattar ton i textmeddelanden. Du kommer att få se 12 meddelanden från antingen en chef eller en vän, och svara på 3 frågor för varje meddelande.</p>
+    <p>Deltagandet är anonymt. I slutet laddar du ner dina svar som en CSV-fil.</p>
+    <label for="age">Din ålder:</label>
+    <input type="number" id="age" required />
+
+    <label for="gender">Ditt kön:</label>
+    <select id="gender">
+      <option value="">-- Välj --</option>
+      <option value="Kvinna">Kvinna</option>
+      <option value="Man">Man</option>
+      <option value="Icke-binär/Annat">Icke-binär/Annat</option>
+      <option value="Vill ej uppge">Vill ej uppge</option>
+    </select>
+
+    <br><br>
+    <button onclick="startStudy()">Starta studien</button>
+  </div>
+
+  <div id="experiment" class="hidden"></div>
+
+  <div id="end" class="hidden">
+    <h2>Tack för ditt deltagande!</h2>
+    <button onclick="downloadCSV()">Ladda ner dina svar (CSV)</button>
+  </div>
+
+  <script>
+    const stimuli = [];
+    const kontexter = ['Chef', 'Vän'];
+    const skiljetecken = ['.', '!', ''];
+    const meddelanden = [
+      'Det blev inte riktigt som jag hade tänkt mig',
+      'Jag trodde faktiskt att det skulle bli bättre'
+    ];
+
+    let responses = [];
+    let current = 0;
+    let participantInfo = {};
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function startStudy() {
+      const age = document.getElementById('age').value;
+      const gender = document.getElementById('gender').value;
+      if (!age || !gender) return alert('Fyll i ålder och kön först.');
+
+      participantInfo = { age, gender };
+      document.getElementById('intro').classList.add('hidden');
+      document.getElementById('experiment').classList.remove('hidden');
+
+      // Skapa alla 12 kombinationer
+      kontexter.forEach(kontext => {
+        skiljetecken.forEach(tecken => {
+          meddelanden.forEach(text => {
+            stimuli.push({ kontext, tecken, text });
+          });
+        });
+      });
+
+      shuffle(stimuli);
+      showNext();
+    }
+
+    function showNext() {
+      const container = document.getElementById('experiment');
+      container.innerHTML = '';
+
+      if (current >= stimuli.length) {
+        container.classList.add('hidden');
+        document.getElementById('end').classList.remove('hidden');
+        return;
+      }
+
+      const stim = stimuli[current];
+      const fullText = stim.text + stim.tecken;
+      const contextText = stim.kontext === 'Chef'
+        ? 'Föreställ dig att du får följande meddelande från din chef:'
+        : 'Föreställ dig att du får följande sms från en nära vän:';
+
+      const block = document.createElement('div');
+      block.className = 'question-block';
+      block.innerHTML = `
+        <p><strong>${contextText}</strong></p>
+        <blockquote>${fullText}</blockquote>
+
+        <label>Hur vänlig upplevde du tonen? (1 = Inte alls, 7 = Mycket)</label>
+        <input type="range" min="1" max="7" value="4" id="q1" />
+
+        <label>Hur allvarligt kändes meddelandet?</label>
+        <input type="range" min="1" max="7" value="4" id="q2" />
+
+        <label>Hur hård eller mjuk uppfattade du avsändaren?</label>
+        <input type="range" min="1" max="7" value="4" id="q3" />
+
+        <button onclick="saveResponse()">Nästa</button>
+      `;
+
+      container.appendChild(block);
+    }
+
+    function saveResponse() {
+      const q1 = document.getElementById('q1').value;
+      const q2 = document.getElementById('q2').value;
+      const q3 = document.getElementById('q3').value;
+      const stim = stimuli[current];
+
+      responses.push({
+        age: participantInfo.age,
+        gender: participantInfo.gender,
+        stimulus_order: current + 1,
+        context: stim.kontext,
+        punctuation: stim.tecken || 'Inget',
+        message: stim.text,
+        friendliness: q1,
+        seriousness: q2,
+        harshness: q3
+      });
+
+      current++;
+      showNext();
+    }
+
+    function downloadCSV() {
+      let csv = 'Age,Gender,Order,Context,Punctuation,Message,Friendly,Serious,Harsh\n';
+      responses.forEach(r => {
+        csv += `${r.age},${r.gender},${r.stimulus_order},${r.context},${r.punctuation},"${r.message}",${r.friendliness},${r.seriousness},${r.harshness}\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'textmeddelande_studie.csv';
+      a.click();
+    }
+  </script>
+</body>
+</html>
