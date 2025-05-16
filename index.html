@@ -23,6 +23,8 @@
 
   <div id="intro">
     <p>Välkommen! Den här studien undersöker hur vi uppfattar ton i textmeddelanden. Du kommer att få se 12 meddelanden från antingen en chef eller en vän, och svara på 3 frågor för varje meddelande.</p>
+    <p>Studien är anonym, frivillig, och du kan avbryta när som helst. Genom att klicka på "Nästa" ger du ditt informerade samtycke till att delta.</p>
+    <p>Om du har några frågor kan du kontakta oss på: gusnhoknsi@student.gu.se</p>
     <p>Formuleringen i meddelandena varierar – ibland med punkt, utropstecken eller utan skiljetecken.</p>
     <p>Efter varje meddelande får du svara på tre frågor om hur du uppfattade tonen. Det är viktigt att du utgår från hur det är skrivet och vem som skickar det.</p>
 
@@ -115,12 +117,15 @@
 
         <label>Hur vänlig upplevde du tonen? (1 = Inte alls, 7 = Mycket)</label>
         <input type="range" min="1" max="7" value="4" id="q1" />
+        <div class="scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span></div>
 
         <label>Hur allvarligt kändes meddelandet?</label>
-        <input type="range" min="1" max="7" value="4" id="q2" />
+        <input type="range" min="1" max="7" value="4" id="q1" />
+        <div class="scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span></div>
 
-        <label>Hur hård eller mjuk uppfattade du avsändaren?</label>
-        <input type="range" min="1" max="7" value="4" id="q3" />
+        <label>Hur mjuk eller hård uppfattade du avsändaren?</label>
+        <input type="range" min="1" max="7" value="4" id="q1" />
+        <div class="scale"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span></div>
 
         <button id="nextButton" onclick="saveResponse()">Nästa</button>
         <span id="loading" style="display:none; margin-left:10px;">Skickar svar...</span>
