@@ -89,34 +89,41 @@
       return array;
     }
 
-    function startStudy() {
-      const age = document.getElementById('age').value;
-      const gender = document.getElementById('gender').value;
-      const pid = document.getElementById('pid').value;
-      if (!pid || pid.length > 20) {
-      return alert('ID måste anges och får vara max 20 tecken.');
-      }
-      if (!age || age < 1 || age > 100) {
-      return alert('Ange en giltig ålder mellan 1 och 125.');
-      }
-      if (!gender) {
-        return alert('Välj ett könsalternativ.');
-      }
+function startStudy() {
+  const pid = document.getElementById('pid').value.trim();
+  const ageValue = document.getElementById('age').value.trim();
+  const gender = document.getElementById('gender').value;
 
-      document.getElementById('intro').classList.add('hidden');
-      document.getElementById('experiment').classList.remove('hidden');
+  if (!pid || pid.length > 20 || !/^[a-zA-Z0-9_-]+$/.test(pid)) {
+    return alert('ID måste anges (max 20 tecken) och får endast innehålla bokstäver, siffror, bindestreck eller understreck.');
+  }
 
-      kontexter.forEach(kontext => {
-        skiljetecken.forEach(tecken => {
-          meddelanden.forEach(text => {
-            stimuli.push({ kontext, tecken, text });
-          });
-        });
+  const age = parseInt(ageValue);
+  if (isNaN(age) || age < 1 || age > 100) {
+    return alert('Ange en giltig ålder mellan 1 och 100 (endast heltal).');
+  }
+
+  if (!gender) {
+    return alert('Välj ett könsalternativ.');
+  }
+
+  participantInfo = { pid, age, gender };
+
+  document.getElementById('intro').classList.add('hidden');
+  document.getElementById('experiment').classList.remove('hidden');
+
+  kontexter.forEach(kontext => {
+    skiljetecken.forEach(tecken => {
+      meddelanden.forEach(text => {
+        stimuli.push({ kontext, tecken, text });
       });
+    });
+  });
 
-      shuffle(stimuli);
-      showNext();
-    }
+  shuffle(stimuli);
+  showNext();
+}
+
 
     function showNext() {
       const container = document.getElementById('experiment');
