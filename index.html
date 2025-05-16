@@ -122,19 +122,28 @@
         <label>Hur hård eller mjuk uppfattade du avsändaren?</label>
         <input type="range" min="1" max="7" value="4" id="q3" />
 
-        <button onclick="saveResponse()">Nästa</button>
+        <button id="nextButton" onclick="saveResponse()">Nästa</button>
+        <span id="loading" style="display:none; margin-left:10px;">Skickar svar...</span>
+
       `;
 
       container.appendChild(block);
     }
 
     function saveResponse() {
+      const nextBtn = document.getElementById('nextButton');
+      const loadingSpan = document.getElementById('loading');
+    
+      // Inaktivera knapp och visa laddningstext
+      nextBtn.disabled = true;
+      loadingSpan.style.display = 'inline';
+    
       const q1 = document.getElementById('q1').value;
       const q2 = document.getElementById('q2').value;
       const q3 = document.getElementById('q3').value;
       const stim = stimuli[current];
-
-      responses.push({
+    
+      const dataToSend = {
         age: participantInfo.age,
         gender: participantInfo.gender,
         stimulus_order: current + 1,
@@ -144,39 +153,43 @@
         friendliness: q1,
         seriousness: q2,
         harshness: q3
+      };
+    
+      responses.push(dataToSend);
+    
+      sendResponseToSheetDB(dataToSend).then(() => {
+        // När svar skickats klart:
+        nextBtn.disabled = false;
+        loadingSpan.style.display = 'none';
+    
+        current++;
+        showNext();
+      }).catch(() => {
+        alert('Något gick fel när vi försökte skicka ditt svar. Försök igen.');
+        nextBtn.disabled = false;
+        loadingSpan.style.display = 'none';
       });
+    }
 
-      sendResponseToSheetDB({
-        age: participantInfo.age,
-        gender: participantInfo.gender,
-        stimulus_order: current + 1,
-        context: stim.kontext,
-        punctuation: stim.tecken || 'Inget',
-        message: stim.text,
-        friendliness: q1,
-        seriousness: q2,
-        harshness: q3
-      });
 
       current++;
       showNext();
     }
 
     function sendResponseToSheetDB(data) {
-      fetch('https://sheetdb.io/api/v1/jrge0h8g0ne99', {
+      return fetch('https://sheetdb.io/api/v1/jrge0h8g0ne99', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ data: data })
-      })
-      .then(response => {
+      }).then(response => {
         if (!response.ok) {
-          console.error('Fel vid sändning till SheetDB:', response.statusText);
+          return Promise.reject('Fel vid sändning till SheetDB: ' + response.statusText);
         }
-      })
-      .catch(error => console.error('Nätverksfel:', error));
+      });
     }
+
 
 
     /*function downloadCSV() {
